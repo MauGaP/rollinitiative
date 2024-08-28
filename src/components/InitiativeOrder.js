@@ -18,9 +18,7 @@ function InitiativeOrder({
   };
 
   const saveChanges = (id) => {
-    if (tempInitiative && tempAC) {
-      editParticipant(id, tempInitiative, tempAC);
-    }
+    editParticipant(id, tempInitiative, tempAC);
     setEditingParticipantId(null);
   };
 
@@ -28,18 +26,19 @@ function InitiativeOrder({
     setEditingParticipantId(null);
   };
 
-  const columnStyle = { width: "25%" };
+  const showActions = editParticipant && deleteParticipant;
   const cellStyle = { height: "55px", verticalAlign: "middle" };
+
   return (
     <div>
       <h2>Initiative Order</h2>
       <table className="table">
         <thead>
           <tr>
-            <th style={columnStyle}>Name</th>
-            <th style={columnStyle}>Initiative</th>
-            <th style={columnStyle}>AC</th>
-            <th style={columnStyle}>Actions</th>
+            <th style={{ width: showActions ? "25%" : "33%" }}>Name</th>
+            <th style={{ width: showActions ? "25%" : "33%" }}>Initiative</th>
+            <th style={{ width: showActions ? "25%" : "33%" }}>AC</th>
+            {showActions && <th style={{ width: "25%" }}>Actions</th>}
           </tr>
         </thead>
         <tbody>
@@ -73,43 +72,41 @@ function InitiativeOrder({
                   participant.ac
                 )}
               </td>
+              {showActions && (
               <td style={cellStyle}>
-                {editingParticipantId === participant.id ? (
-                  <>
-                    <button
-                      className="btn btn-sm btn-success"
-                      onClick={() => saveChanges(participant.id)}
-                    >
-                      Save
-                    </button>
-                    <button
-                      className="btn btn-sm btn-secondary ms-2"
-                      onClick={cancelEditing}
-                    >
-                      Cancel
-                    </button>
-                  </>
-                ) : (
-                  <>
-                    {editParticipant && (
+                  {editingParticipantId === participant.id ? (
+                    <>
+                      <button
+                        className="btn btn-sm btn-success"
+                        onClick={() => saveChanges(participant.id)}
+                      >
+                        Save
+                      </button>
+                      <button
+                        className="btn btn-sm btn-secondary"
+                        onClick={cancelEditing}
+                      >
+                        Cancel
+                      </button>
+                    </>
+                  ) : (
+                    <>
                       <button
                         className="btn btn-sm btn-primary"
                         onClick={() => startEditing(participant)}
                       >
                         Edit
                       </button>
-                    )}
-                    {deleteParticipant && (
                       <button
-                        className="btn btn-sm btn-danger ms-2"
+                        className="btn btn-sm btn-danger"
                         onClick={() => deleteParticipant(participant.id)}
                       >
                         Delete
                       </button>
-                    )}
-                  </>
-                )}
-              </td>
+                    </>
+                  )}
+                </td>
+              )}
             </tr>
           ))}
         </tbody>

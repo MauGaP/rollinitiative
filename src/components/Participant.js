@@ -57,7 +57,7 @@ function Participant({
         {deleteParticipant && !isEditing && (
           <button
             onClick={() => deleteParticipant(participant.id)}
-            className="btn btn-danger btn-sm ms-2"
+            className="btn btn-danger btn-sm"
           >
             Delete
           </button>

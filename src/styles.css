@@ -18,8 +18,9 @@ code {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 100%;
+  max-width: 100%;
   gap: 20px;
+  margin: 10px;
 }
 
 /* Encounter Title */
@@ -35,6 +36,8 @@ code {
   width: 100%;
   max-width: 1200px;
   justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap; /* Ensure wrapping on smaller screens */
 }
 
 /* Panel Styles */
@@ -71,6 +74,20 @@ form {
 }
 
 /* Input and Button Styles */
-input, button {
+input,
+button {
   font-size: 16px;
+}
+
+.cell {
+  height: "55px";
+  verticalalign: "middle";
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .left-panel,
+  .right-panel {
+    width: 100%; /* Panels take full width on smaller screens */
+  }
 }

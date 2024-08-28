@@ -13,10 +13,32 @@ function EncounterPage() {
   // Function to copy the encounter URL to the clipboard
   const copyUrlToClipboard = () => {
     const url = window.location.href;
-    navigator.clipboard
-      .writeText(url)
-      .then(() => alert("Encounter URL copied to clipboard!"))
-      .catch((err) => console.error("Failed to copy the URL: ", err));
+
+    if (navigator.clipboard && window.isSecureContext) {
+      // Use the Clipboard API
+      navigator.clipboard
+        .writeText(url)
+        .then(() => alert("Encounter URL copied to clipboard!"))
+        .catch(() => alert("Failed to copy the URL. Please try again."));
+    } else {
+      // Fallback for older browsers
+      const textArea = document.createElement("textarea");
+      textArea.value = url;
+      textArea.style.position = "fixed"; // Prevent scrolling
+      textArea.style.opacity = "0"; // Hide the textarea
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+
+      try {
+        document.execCommand("copy");
+        alert("Encounter URL copied to clipboard!");
+      } catch {
+        alert("Failed to copy the URL. Please try again.");
+      }
+
+      document.body.removeChild(textArea);
+    }
   };
 
   // Fetch the encounter data and set up a listener for real-time updates

@@ -42,7 +42,7 @@ function AddParticipant({ addParticipant }) {
       <div className="form-group">
         <label htmlFor="acInput">Armor Class</label>
         <input
-          type="text"
+          type="number"
           className="form-control"
           id="acInput"
           placeholder="Enter Armor Class"
