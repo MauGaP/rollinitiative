@@ -31,7 +31,14 @@ function InitiativeOrder({
 
   return (
     <div>
-      <h2>Initiative Order</h2>
+      <div className="initiative-header">
+        <h2>Initiative Order</h2>
+        {nextTurn && (
+          <button onClick={nextTurn} className="btn btn-success">
+            Next Turn
+          </button>
+        )}
+      </div>
       <table className="table">
         <thead>
           <tr>
@@ -73,7 +80,7 @@ function InitiativeOrder({
                 )}
               </td>
               {showActions && (
-              <td style={cellStyle}>
+                <td style={cellStyle}>
                   {editingParticipantId === participant.id ? (
                     <>
                       <button
@@ -111,11 +118,6 @@ function InitiativeOrder({
           ))}
         </tbody>
       </table>
-      {nextTurn && (
-        <button onClick={nextTurn} className="btn btn-success mt-3">
-          Next Turn
-        </button>
-      )}
     </div>
   );
 }
