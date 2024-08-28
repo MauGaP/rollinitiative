@@ -9,10 +9,14 @@ function LandingPage() {
   const navigate = useNavigate();
 
   const createEncounter = async () => {
+    const sessionId = sessionStorage.getItem("sessionId") || Date.now().toString();
+    sessionStorage.setItem("sessionId", sessionId);
+
     try {
       const docRef = await addDoc(collection(db, "encounters"), {
         name: encounterName,
         participants: [],
+        createdBy: sessionId,
       });
       navigate(`/encounter/${docRef.id}`);
     } catch (e) {

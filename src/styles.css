@@ -1,37 +1,76 @@
+/* General Body Styles */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Code Font */
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+
+/* App Container Styles */
 .app-container {
-    display: flex;
-    gap: 20px;
-    padding: 20px;
-  }
-  
-  .left-panel, .right-panel {
-    border: 1px solid #ccc;
-    padding: 20px;
-    border-radius: 8px;
-  }
-  
-  .right-panel {
-    width: 300px;
-  }
-  
-  .current-turn {
-    font-weight: bold;
-    color: red;
-  }
-  
-  form {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-  
-  input {
-    padding: 5px;
-    font-size: 16px;
-  }
-  
-  button {
-    padding: 5px 10px;
-    font-size: 16px;
-  }
-  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  gap: 20px;
+}
+
+/* Encounter Title */
+.encounter-title {
+  font-weight: bold;
+  text-align: center;
+  width: 100%;
+}
+
+/* Content Container */
+.content-container {
+  display: flex;
+  width: 100%;
+  max-width: 1200px;
+  justify-content: space-between;
+}
+
+/* Panel Styles */
+.left-panel,
+.right-panel,
+.full-width-panel {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.left-panel {
+  width: 30%;
+}
+
+.right-panel {
+  width: 65%;
+}
+
+.full-width-panel {
+  width: 100%;
+}
+
+/* Current Turn Highlight */
+.current-turn {
+  font-weight: bold;
+  color: red;
+}
+
+/* Form Styles */
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Input and Button Styles */
+input, button {
+  font-size: 16px;
+}

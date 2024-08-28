@@ -7,35 +7,39 @@ function InitiativeOrder({
   editParticipant,
   deleteParticipant,
 }) {
-  const [isEditing, setIsEditing] = useState(null);
-  const [newInitiative, setNewInitiative] = useState("");
-  const [newAc, setNewAc] = useState("");
+  const [editingParticipantId, setEditingParticipantId] = useState(null);
+  const [tempInitiative, setTempInitiative] = useState("");
+  const [tempAC, setTempAC] = useState("");
 
-  const handleEdit = (id) => {
-    setIsEditing(id);
-    const participant = participants.find((p) => p.id === id);
-    setNewInitiative(participant.initiative);
-    setNewAc(participant.ac);
+  const startEditing = (participant) => {
+    setEditingParticipantId(participant.id);
+    setTempInitiative(participant.initiative);
+    setTempAC(participant.ac);
   };
 
-  const handleSave = (id) => {
-    editParticipant(id, parseInt(newInitiative, 10), parseInt(newAc, 10));
-    setIsEditing(null);
+  const saveChanges = (id) => {
+    if (tempInitiative && tempAC) {
+      editParticipant(id, tempInitiative, tempAC);
+    }
+    setEditingParticipantId(null);
+  };
+
+  const cancelEditing = () => {
+    setEditingParticipantId(null);
   };
 
   const columnStyle = { width: "25%" };
-  const cellStyle = { height: "40px", verticalAlign: "middle" };
-
+  const cellStyle = { height: "55px", verticalAlign: "middle" };
   return (
     <div>
       <h2>Initiative Order</h2>
       <table className="table">
         <thead>
           <tr>
-            <th>Name</th>
+            <th style={columnStyle}>Name</th>
             <th style={columnStyle}>Initiative</th>
             <th style={columnStyle}>AC</th>
-            <th>Actions</th>
+            <th style={columnStyle}>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -46,53 +50,63 @@ function InitiativeOrder({
             >
               <td style={cellStyle}>{participant.name}</td>
               <td style={cellStyle}>
-                {isEditing === participant.id ? (
+                {editingParticipantId === participant.id ? (
                   <input
                     type="number"
-                    value={newInitiative}
-                    onChange={(e) => setNewInitiative(e.target.value)}
+                    value={tempInitiative}
+                    onChange={(e) => setTempInitiative(e.target.value)}
                     className="form-control"
-                    style={{ width: "100%", height: "100%" }}
                   />
                 ) : (
                   participant.initiative
                 )}
               </td>
               <td style={cellStyle}>
-                {isEditing === participant.id ? (
+                {editingParticipantId === participant.id ? (
                   <input
                     type="number"
-                    value={newAc}
-                    onChange={(e) => setNewAc(e.target.value)}
+                    value={tempAC}
+                    onChange={(e) => setTempAC(e.target.value)}
                     className="form-control"
-                    style={{ width: "100%", height: "100%" }}
                   />
                 ) : (
                   participant.ac
                 )}
               </td>
               <td style={cellStyle}>
-                {isEditing === participant.id ? (
-                  <button
-                    className="btn btn-sm btn-success"
-                    onClick={() => handleSave(participant.id)}
-                  >
-                    Save
-                  </button>
-                ) : (
+                {editingParticipantId === participant.id ? (
                   <>
                     <button
-                      className="btn btn-sm btn-primary"
-                      onClick={() => handleEdit(participant.id)}
+                      className="btn btn-sm btn-success"
+                      onClick={() => saveChanges(participant.id)}
                     >
-                      Edit
+                      Save
                     </button>
                     <button
-                      className="btn btn-sm btn-danger ms-2"
-                      onClick={() => deleteParticipant(participant.id)}
+                      className="btn btn-sm btn-secondary ms-2"
+                      onClick={cancelEditing}
                     >
-                      Delete
+                      Cancel
                     </button>
+                  </>
+                ) : (
+                  <>
+                    {editParticipant && (
+                      <button
+                        className="btn btn-sm btn-primary"
+                        onClick={() => startEditing(participant)}
+                      >
+                        Edit
+                      </button>
+                    )}
+                    {deleteParticipant && (
+                      <button
+                        className="btn btn-sm btn-danger ms-2"
+                        onClick={() => deleteParticipant(participant.id)}
+                      >
+                        Delete
+                      </button>
+                    )}
                   </>
                 )}
               </td>
@@ -100,9 +114,11 @@ function InitiativeOrder({
           ))}
         </tbody>
       </table>
-      <button onClick={nextTurn} className="btn btn-success mt-3">
-        Next Turn
-      </button>
+      {nextTurn && (
+        <button onClick={nextTurn} className="btn btn-success mt-3">
+          Next Turn
+        </button>
+      )}
     </div>
   );
 }
