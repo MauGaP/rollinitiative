@@ -59,7 +59,7 @@ function EncounterPage() {
   }, [id]);
 
   // Function to add a participant
-  const addParticipant = async (name, initiative, ac) => {
+  const addParticipant = async (name, initiative, ac, type) => {
     if (!isCreator) return;
 
     const newParticipant = {
@@ -67,6 +67,7 @@ function EncounterPage() {
       name,
       initiative: parseInt(initiative, 10),
       ac,
+      type, // Add the type to the new participant object
     };
     const updatedParticipants = [
       ...encounter.participants,

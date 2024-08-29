@@ -64,7 +64,10 @@ code {
 /* Current Turn Highlight */
 .current-turn {
   font-weight: bold;
-  color: red;
+}
+
+.current-turn td {
+  background-color: #8dccf8 !important; /* Apply background to all table cells in the row */
 }
 
 /* Form Styles */
@@ -92,4 +95,11 @@ button {
   .right-panel {
     width: 100%; /* Panels take full width on smaller screens */
   }
+}
+
+.participant-icon {
+  width: 40px; /* Adjust the size as needed */
+  height: 40px;
+  margin-right: 10px;
+  vertical-align: middle;
 }

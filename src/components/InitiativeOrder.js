@@ -1,4 +1,9 @@
 import React, { useState } from "react";
+import PartyIcon from '../assets/icons/party.svg';
+import EnemyIcon from '../assets/icons/enemy.svg';
+import AllyIcon from '../assets/icons/ally.svg';
+import NeutralIcon from '../assets/icons/neutral.svg';
+
 
 function InitiativeOrder({
   participants,
@@ -29,6 +34,21 @@ function InitiativeOrder({
   const showActions = editParticipant && deleteParticipant;
   const cellStyle = { height: "55px", verticalAlign: "middle" };
 
+  const getIconByType = (type) => {
+    switch (type) {
+      case 'Party':
+        return <img src={PartyIcon} alt="Party" className="participant-icon" />;
+      case 'Enemy':
+        return <img src={EnemyIcon} alt="Enemy" className="participant-icon" />;
+      case 'Ally':
+        return <img src={AllyIcon} alt="Ally" className="participant-icon" />;
+      case 'Neutral':
+        return <img src={NeutralIcon} alt="Neutral" className="participant-icon" />;
+      default:
+        return null;
+    }
+  };
+
   return (
     <div>
       <div className="initiative-header">
@@ -52,9 +72,11 @@ function InitiativeOrder({
           {participants.map((participant, index) => (
             <tr
               key={participant.id}
-              className={index === currentTurnIndex ? "table-primary" : ""}
+              className={index === currentTurnIndex ? "current-turn" : ""}
             >
-              <td style={cellStyle}>{participant.name}</td>
+              <td style={cellStyle}>
+                {getIconByType(participant.type)} {participant.name}
+              </td>
               <td style={cellStyle}>
                 {editingParticipantId === participant.id ? (
                   <input
