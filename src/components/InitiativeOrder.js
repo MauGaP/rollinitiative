@@ -1,9 +1,11 @@
-import React, { useState } from "react";
-import PartyIcon from '../assets/icons/party.svg';
-import EnemyIcon from '../assets/icons/enemy.svg';
-import AllyIcon from '../assets/icons/ally.svg';
-import NeutralIcon from '../assets/icons/neutral.svg';
-
+import React, { useState, useEffect } from "react";
+import Chip from "@mui/material/Chip";
+import AllyIcon from "../assets/icons/ally.svg";
+import EnemyIcon from "../assets/icons/enemy.svg";
+import NeutralIcon from "../assets/icons/neutral.svg";
+import PartyIcon from "../assets/icons/party.svg";
+import ConditionModal from "./ConditionModal";
+import EditParticipantModal from "./EditParticipantModal";
 
 function InitiativeOrder({
   participants,
@@ -11,39 +13,84 @@ function InitiativeOrder({
   nextTurn,
   editParticipant,
   deleteParticipant,
+  dmNotes,
+  updateDmNotes,
+  isCreator,
 }) {
   const [editingParticipantId, setEditingParticipantId] = useState(null);
-  const [tempInitiative, setTempInitiative] = useState("");
-  const [tempAC, setTempAC] = useState("");
+  const [selectedCondition, setSelectedCondition] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [notes, setNotes] = useState(dmNotes || "");
+
+  useEffect(() => {
+    setNotes(dmNotes);
+  }, [dmNotes]);
+
+  const handleBlur = () => {
+    updateDmNotes(notes);
+  };
 
   const startEditing = (participant) => {
     setEditingParticipantId(participant.id);
-    setTempInitiative(participant.initiative);
-    setTempAC(participant.ac);
+    setIsEditModalOpen(true);
   };
 
-  const saveChanges = (id) => {
-    editParticipant(id, tempInitiative, tempAC);
-    setEditingParticipantId(null);
+  const saveChanges = (name, initiative, ac, type, conditions) => {
+    if (editingParticipantId) {
+      editParticipant(
+        editingParticipantId,
+        name,
+        initiative,
+        ac,
+        type,
+        conditions
+      );
+    }
+    setIsEditModalOpen(false);
   };
 
   const cancelEditing = () => {
     setEditingParticipantId(null);
+    setIsEditModalOpen(false);
   };
 
-  const showActions = editParticipant && deleteParticipant;
-  const cellStyle = { height: "55px", verticalAlign: "middle" };
+  const handleConditionClick = (condition) => {
+    setSelectedCondition(condition);
+    setIsModalOpen(true);
+  };
+
+  const handleConditionDelete = (participantId, conditionToDelete) => {
+    const participant = participants.find((p) => p.id === participantId);
+
+    const updatedConditions = Array.isArray(participant.conditions)
+      ? participant.conditions.filter(
+          (condition) => condition !== conditionToDelete
+        )
+      : [];
+
+    editParticipant(
+      participantId,
+      participant.name, 
+      participant.initiative, 
+      participant.ac, 
+      participant.type, 
+      updatedConditions
+    );
+  };
 
   const getIconByType = (type) => {
     switch (type) {
-      case 'Party':
+      case "Party":
         return <img src={PartyIcon} alt="Party" className="participant-icon" />;
-      case 'Enemy':
+      case "Enemy":
         return <img src={EnemyIcon} alt="Enemy" className="participant-icon" />;
-      case 'Ally':
+      case "Ally":
         return <img src={AllyIcon} alt="Ally" className="participant-icon" />;
-      case 'Neutral':
-        return <img src={NeutralIcon} alt="Neutral" className="participant-icon" />;
+      case "Neutral":
+        return (
+          <img src={NeutralIcon} alt="Neutral" className="participant-icon" />
+        );
       default:
         return null;
     }
@@ -62,10 +109,11 @@ function InitiativeOrder({
       <table className="table">
         <thead>
           <tr>
-            <th style={{ width: showActions ? "25%" : "33%" }}>Name</th>
-            <th style={{ width: showActions ? "25%" : "33%" }}>Initiative</th>
-            <th style={{ width: showActions ? "25%" : "33%" }}>AC</th>
-            {showActions && <th style={{ width: "25%" }}>Actions</th>}
+            <th style={{ width: "20%" }}>Name</th>
+            <th style={{ width: "20%" }}>Initiative</th>
+            <th style={{ width: "20%" }}>AC</th>
+            <th style={{ width: "20%" }}>Conditions</th>
+            {isCreator && <th style={{ width: "20%" }}>Actions</th>}
           </tr>
         </thead>
         <tbody>
@@ -74,72 +122,76 @@ function InitiativeOrder({
               key={participant.id}
               className={index === currentTurnIndex ? "current-turn" : ""}
             >
-              <td style={cellStyle}>
+              <td>
                 {getIconByType(participant.type)} {participant.name}
               </td>
-              <td style={cellStyle}>
-                {editingParticipantId === participant.id ? (
-                  <input
-                    type="number"
-                    value={tempInitiative}
-                    onChange={(e) => setTempInitiative(e.target.value)}
-                    className="form-control"
-                  />
-                ) : (
-                  participant.initiative
-                )}
+              <td>{participant.initiative}</td>
+              <td>{participant.ac}</td>
+              <td>
+                {Array.isArray(participant.conditions) &&
+                  participant.conditions.map((condition, idx) => (
+                    <Chip
+                      key={idx}
+                      onClick={() => handleConditionClick(condition)}
+                      onDelete={
+                        isCreator
+                          ? () =>
+                              handleConditionDelete(participant.id, condition)
+                          : undefined
+                      }
+                      label={condition}
+                      variant="outlined"
+                      style={{ marginRight: "5px", marginBottom: "5px" }}
+                    />
+                  ))}
               </td>
-              <td style={cellStyle}>
-                {editingParticipantId === participant.id ? (
-                  <input
-                    type="number"
-                    value={tempAC}
-                    onChange={(e) => setTempAC(e.target.value)}
-                    className="form-control"
-                  />
-                ) : (
-                  participant.ac
-                )}
-              </td>
-              {showActions && (
-                <td style={cellStyle}>
-                  {editingParticipantId === participant.id ? (
-                    <>
-                      <button
-                        className="btn btn-sm btn-success"
-                        onClick={() => saveChanges(participant.id)}
-                      >
-                        Save
-                      </button>
-                      <button
-                        className="btn btn-sm btn-secondary"
-                        onClick={cancelEditing}
-                      >
-                        Cancel
-                      </button>
-                    </>
-                  ) : (
-                    <>
-                      <button
-                        className="btn btn-sm btn-primary"
-                        onClick={() => startEditing(participant)}
-                      >
-                        Edit
-                      </button>
-                      <button
-                        className="btn btn-sm btn-danger"
-                        onClick={() => deleteParticipant(participant.id)}
-                      >
-                        Delete
-                      </button>
-                    </>
-                  )}
+              {isCreator && (
+                <td>
+                  <button
+                    className="btn btn-sm btn-primary"
+                    onClick={() => startEditing(participant)}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    className="btn btn-sm btn-danger"
+                    onClick={() => deleteParticipant(participant.id)}
+                  >
+                    Delete
+                  </button>
                 </td>
               )}
             </tr>
           ))}
         </tbody>
       </table>
+
+      {isCreator && (
+        <div style={{ marginTop: "20px" }}>
+          <h3>DM Notes</h3>
+          <textarea
+            value={notes}
+            onChange={(e) => setNotes(e.target.value)}
+            onBlur={handleBlur}
+            className="form-control"
+            rows="5"
+            placeholder="Enter your notes here..."
+          />
+        </div>
+      )}
+
+      <EditParticipantModal
+        open={isEditModalOpen}
+        onClose={cancelEditing}
+        onSave={saveChanges}
+        participant={participants.find((p) => p.id === editingParticipantId)}
+      />
+
+      <ConditionModal
+        open={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        conditionName={selectedCondition}
+      />
     </div>
   );
 }

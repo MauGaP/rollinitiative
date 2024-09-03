@@ -10,22 +10,19 @@ function EncounterPage() {
   const [encounter, setEncounter] = useState(null);
   const [currentTurnIndex, setCurrentTurnIndex] = useState(0);
 
-  // Function to copy the encounter URL to the clipboard
   const copyUrlToClipboard = () => {
     const url = window.location.href;
 
     if (navigator.clipboard && window.isSecureContext) {
-      // Use the Clipboard API
       navigator.clipboard
         .writeText(url)
         .then(() => alert("Encounter URL copied to clipboard!"))
         .catch(() => alert("Failed to copy the URL. Please try again."));
     } else {
-      // Fallback for older browsers
       const textArea = document.createElement("textarea");
       textArea.value = url;
-      textArea.style.position = "fixed"; // Prevent scrolling
-      textArea.style.opacity = "0"; // Hide the textarea
+      textArea.style.position = "fixed";
+      textArea.style.opacity = "0";
       document.body.appendChild(textArea);
       textArea.focus();
       textArea.select();
@@ -41,7 +38,6 @@ function EncounterPage() {
     }
   };
 
-  // Fetch the encounter data and set up a listener for real-time updates
   useEffect(() => {
     const docRef = doc(db, "encounters", id);
 
@@ -58,8 +54,13 @@ function EncounterPage() {
     return () => unsubscribe();
   }, [id]);
 
-  // Function to add a participant
-  const addParticipant = async (name, initiative, ac, type) => {
+  const addParticipant = async (
+    name,
+    initiative,
+    ac,
+    type,
+    conditions = []
+  ) => {
     if (!isCreator) return;
 
     const newParticipant = {
@@ -67,7 +68,8 @@ function EncounterPage() {
       name,
       initiative: parseInt(initiative, 10),
       ac,
-      type, // Add the type to the new participant object
+      type,
+      conditions,
     };
     const updatedParticipants = [
       ...encounter.participants,
@@ -85,8 +87,14 @@ function EncounterPage() {
     }
   };
 
-  // Function to edit a participant's details
-  const editParticipant = async (participantId, newInitiative, newAC) => {
+  const editParticipant = async (
+    participantId,
+    newName,
+    newInitiative,
+    newAC,
+    newType,
+    newConditions = []
+  ) => {
     if (!isCreator) return;
 
     const updatedParticipants = encounter.participants
@@ -94,8 +102,11 @@ function EncounterPage() {
         p.id === participantId
           ? {
               ...p,
+              name: newName,
               initiative: parseInt(newInitiative, 10),
               ac: parseInt(newAC, 10),
+              type: newType,
+              conditions: newConditions,
             }
           : p
       )
@@ -112,7 +123,6 @@ function EncounterPage() {
     }
   };
 
-  // Function to delete a participant
   const deleteParticipant = async (participantId) => {
     if (!isCreator) return;
 
@@ -131,7 +141,16 @@ function EncounterPage() {
     }
   };
 
-  // Function to move to the next turn
+  const updateDmNotes = async (newNotes) => {
+    try {
+      await updateDoc(doc(db, "encounters", id), {
+        dmNotes: newNotes,
+      });
+    } catch (error) {
+      console.error("Error updating DM notes:", error);
+    }
+  };
+
   const nextTurn = async () => {
     const newTurnIndex = (currentTurnIndex + 1) % encounter.participants.length;
     setCurrentTurnIndex(newTurnIndex);
@@ -145,7 +164,6 @@ function EncounterPage() {
     }
   };
 
-  // If encounter data is still loading
   if (!encounter) {
     return <div>Loading...</div>;
   }
@@ -176,6 +194,9 @@ function EncounterPage() {
             nextTurn={isCreator ? nextTurn : null}
             editParticipant={isCreator ? editParticipant : null}
             deleteParticipant={isCreator ? deleteParticipant : null}
+            dmNotes={encounter.dmNotes || ""}
+            updateDmNotes={updateDmNotes}
+            isCreator={isCreator}
           />
         </div>
       </div>

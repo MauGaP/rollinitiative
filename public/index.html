@@ -6,20 +6,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Roll Initiative - MauGaP</title>
   <link rel="icon" href="./rollicon.png" />
-
-
-  <!-- Firebase SDKs - Include only the Firebase features as needed -->
-  <script defer src="/__/firebase/10.13.0/firebase-app-compat.js"></script>
-  <script defer src="/__/firebase/10.13.0/firebase-auth-compat.js"></script>
-  <script defer src="/__/firebase/10.13.0/firebase-database-compat.js"></script>
-  <script defer src="/__/firebase/10.13.0/firebase-firestore-compat.js"></script>
-  <script defer src="/__/firebase/10.13.0/firebase-functions-compat.js"></script>
-  <script defer src="/__/firebase/10.13.0/firebase-messaging-compat.js"></script>
-  <script defer src="/__/firebase/10.13.0/firebase-storage-compat.js"></script>
-  <script defer src="/__/firebase/10.13.0/firebase-analytics-compat.js"></script>
-  <script defer src="/__/firebase/10.13.0/firebase-remote-config-compat.js"></script>
-  <script defer src="/__/firebase/10.13.0/firebase-performance-compat.js"></script>
-  <script defer src="/__/firebase/init.js?useEmulator=true"></script>
 </head>
 
 <body>
@@ -27,27 +13,6 @@
   <div id="root"></div>
 
   <!-- Optional: You can include additional scripts if necessary -->
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      try {
-        let app = firebase.app();
-        let features = [
-          'auth',
-          'database',
-          'firestore',
-          'functions',
-          'messaging',
-          'storage',
-          'analytics',
-          'remoteConfig',
-          'performance',
-        ].filter(feature => typeof app[feature] === 'function');
-      } catch (e) {
-        console.error(e);
-        // Handle the error, if necessary
-      }
-    });
-  </script>
 </body>
 
 </html>

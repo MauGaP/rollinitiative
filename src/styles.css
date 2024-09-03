@@ -7,12 +7,6 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Code Font */
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
-}
-
 /* App Container Styles */
 .app-container {
   display: flex;
@@ -68,18 +62,6 @@ code {
 
 .current-turn td {
   background-color: #8dccf8 !important; /* Apply background to all table cells in the row */
-}
-
-/* Form Styles */
-form {
-  display: flex;
-  flex-direction: column;
-}
-
-/* Input and Button Styles */
-input,
-button {
-  font-size: 16px;
 }
 
 .initiative-header {
