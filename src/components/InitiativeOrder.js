@@ -1,6 +1,9 @@
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Chip from "@mui/material/Chip";
+import IconButton from "@mui/material/IconButton";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -168,23 +171,21 @@ function InitiativeOrder({
                 </TableCell>
                 {isCreator && (
                   <TableCell>
-                    <Button
-                      variant="contained"
+                    <IconButton
                       color="primary"
                       size="small"
                       onClick={() => startEditing(participant)}
                       sx={{ marginRight: 1 }}
                     >
-                      Edit
-                    </Button>
-                    <Button
-                      variant="contained"
+                      <EditIcon />
+                    </IconButton>
+                    <IconButton
                       color="error"
                       size="small"
                       onClick={() => deleteParticipant(participant.id)}
                     >
-                      Delete
-                    </Button>
+                      <DeleteIcon />
+                    </IconButton>
                   </TableCell>
                 )}
               </TableRow>

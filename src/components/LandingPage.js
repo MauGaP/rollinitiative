@@ -7,6 +7,8 @@ import {
   Divider,
   TextField,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import { addDoc, collection, doc, getDoc } from "firebase/firestore";
 import React, { useState } from "react";
@@ -19,6 +21,9 @@ function LandingPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm")); // Detect if the screen is mobile
 
   const createEncounter = async () => {
     if (encounterName.trim() === "") {
@@ -71,14 +76,16 @@ function LandingPage() {
   };
 
   return (
-    <Container maxWidth="sm" sx={{ mt: 5 }}>
+    <Container maxWidth="sm" sx={{ mt: isMobile ? 3 : 5, px: isMobile ? 2 : 0 }}>
       {error && (
         <Alert severity="error" sx={{ mb: 3 }}>
           {error}
         </Alert>
       )}
       <Box sx={{ mb: 3 }}>
-        <Typography variant="h4">Create a New Encounter</Typography>
+        <Typography variant={isMobile ? "h5" : "h4"}>
+          Create a New Encounter
+        </Typography>
         <TextField
           label="Enter encounter name"
           variant="outlined"
@@ -100,7 +107,9 @@ function LandingPage() {
       </Box>
       <Divider sx={{ mb: 3 }} />
       <Box>
-        <Typography variant="h5">Join an Existing Encounter</Typography>
+        <Typography variant={isMobile ? "h6" : "h5"}>
+          Join an Existing Encounter
+        </Typography>
         <TextField
           label="Enter encounter ID"
           variant="outlined"
