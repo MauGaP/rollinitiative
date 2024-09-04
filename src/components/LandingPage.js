@@ -1,6 +1,16 @@
+import {
+  Alert,
+  Box,
+  Button,
+  CircularProgress,
+  Container,
+  Divider,
+  TextField,
+  Typography,
+} from "@mui/material";
+import { addDoc, collection, doc, getDoc } from "firebase/firestore";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { collection, addDoc, doc, getDoc } from "firebase/firestore";
 import { db } from "../App";
 
 function LandingPage() {
@@ -17,7 +27,8 @@ function LandingPage() {
     }
 
     setLoading(true);
-    const sessionId = sessionStorage.getItem("sessionId") || Date.now().toString();
+    const sessionId =
+      sessionStorage.getItem("sessionId") || Date.now().toString();
     sessionStorage.setItem("sessionId", sessionId);
 
     try {
@@ -60,45 +71,59 @@ function LandingPage() {
   };
 
   return (
-    <div className="container">
-      <h1>DnD Encounter Manager</h1>
-      {error && <div className="alert alert-danger">{error}</div>}
-      <div className="form-group">
-        <label>Create a New Encounter</label>
-        <input
-          type="text"
-          className="form-control"
-          placeholder="Enter encounter name"
+    <Container maxWidth="sm" sx={{ mt: 5 }}>
+      <Typography variant="h3" component="h1" gutterBottom>
+        DnD Encounter Manager
+      </Typography>
+      {error && (
+        <Alert severity="error" sx={{ mb: 3 }}>
+          {error}
+        </Alert>
+      )}
+      <Box sx={{ mb: 3 }}>
+        <Typography variant="h6">Create a New Encounter</Typography>
+        <TextField
+          label="Enter encounter name"
+          variant="outlined"
+          fullWidth
           value={encounterName}
           onChange={(e) => setEncounterName(e.target.value)}
+          sx={{ mt: 2 }}
         />
-        <button
-          className="btn btn-primary mt-3"
+        <Button
+          variant="contained"
+          color="primary"
+          fullWidth
           onClick={createEncounter}
           disabled={loading}
+          sx={{ mt: 2 }}
         >
-          {loading ? "Creating..." : "Create Encounter"}
-        </button>
-      </div>
-      <hr />
-      <div className="form-group">
-        <label>Join an Existing Encounter</label>
-        <input
-          type="text"
-          className="form-control"
-          placeholder="Enter encounter ID"
+          {loading ? <CircularProgress size={24} /> : "Create Encounter"}
+        </Button>
+      </Box>
+      <Divider sx={{ mb: 3 }} />
+      <Box>
+        <Typography variant="h6">Join an Existing Encounter</Typography>
+        <TextField
+          label="Enter encounter ID"
+          variant="outlined"
+          fullWidth
           value={encounterId}
           onChange={(e) => setEncounterId(e.target.value)}
+          sx={{ mt: 2 }}
         />
-        <button
-          className="btn btn-secondary mt-3"
+        <Button
+          variant="contained"
+          color="secondary"
+          fullWidth
           onClick={joinEncounter}
           disabled={loading}
+          sx={{ mt: 2 }}
         >
-          {loading ? "Joining..." : "Join Encounter"}
-        </button>
-      </div>
-    </div>
+          {loading ? <CircularProgress size={24} /> : "Join Encounter"}
+        </Button>
+      </Box>
+    </Container>
   );
 }
 

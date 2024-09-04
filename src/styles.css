@@ -61,7 +61,7 @@ body {
 }
 
 .current-turn td {
-  background-color: #8dccf8 !important; /* Apply background to all table cells in the row */
+  background-color: #e24b5f !important; /* Apply background to all table cells in the row */
 }
 
 .initiative-header {

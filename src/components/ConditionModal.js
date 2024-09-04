@@ -10,7 +10,7 @@ const ConditionModal = ({ conditionName, open, onClose }) => {
   const { name, description, image } = condition;
 
   return (
-    <Dialog classname="modal-content" open={open} onClose={onClose}>
+    <Dialog className="modal-content" open={open} onClose={onClose}>
       <div className="modal-content">
         <DialogTitle>{name}</DialogTitle>
         {image && (

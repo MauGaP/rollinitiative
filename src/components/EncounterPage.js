@@ -1,5 +1,9 @@
+import { Box, Typography } from "@mui/material";
+import Alert from "@mui/material/Alert";
+import Button from "@mui/material/Button";
+import Snackbar from "@mui/material/Snackbar";
 import { doc, onSnapshot, updateDoc } from "firebase/firestore";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { db } from "../App";
 import AddParticipant from "./AddParticipant";
@@ -9,6 +13,10 @@ function EncounterPage() {
   const { id } = useParams();
   const [encounter, setEncounter] = useState(null);
   const [currentTurnIndex, setCurrentTurnIndex] = useState(0);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+
+  // Ref for the Copy URL button
+  const copyButtonRef = useRef(null);
 
   const copyUrlToClipboard = () => {
     const url = window.location.href;
@@ -16,8 +24,8 @@ function EncounterPage() {
     if (navigator.clipboard && window.isSecureContext) {
       navigator.clipboard
         .writeText(url)
-        .then(() => alert("Encounter URL copied to clipboard!"))
-        .catch(() => alert("Failed to copy the URL. Please try again."));
+        .then(() => showSnackbar())
+        .catch(() => showSnackbar());
     } else {
       const textArea = document.createElement("textarea");
       textArea.value = url;
@@ -29,13 +37,21 @@ function EncounterPage() {
 
       try {
         document.execCommand("copy");
-        alert("Encounter URL copied to clipboard!");
+        showSnackbar();
       } catch {
-        alert("Failed to copy the URL. Please try again.");
+        showSnackbar();
       }
 
       document.body.removeChild(textArea);
     }
+  };
+
+  const showSnackbar = () => {
+    setSnackbarOpen(true);
+  };
+
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
   };
 
   useEffect(() => {
@@ -174,18 +190,22 @@ function EncounterPage() {
   return (
     <div className="app-container">
       <h1 className="encounter-title">Encounter: {encounter.name}</h1>
-      <button
-        className="copy-url-btn btn btn-primary"
+      <Button
+        ref={copyButtonRef}
+        variant="contained"
+        color="primary"
         onClick={copyUrlToClipboard}
       >
         Copy URL
-      </button>
+      </Button>
       <div className="content-container">
         {isCreator && (
-          <div className="left-panel">
-            <h2>Add Participants</h2>
-            <AddParticipant addParticipant={addParticipant} />
-          </div>
+          <Box mb={3} className="left-panel">
+            <Typography variant="h4" component="h2" mb={3}>
+              Add Participants
+            </Typography>
+            <AddParticipant sx={{ mt: 3 }} addParticipant={addParticipant} />
+          </Box>
         )}
         <div className={isCreator ? "right-panel" : "full-width-panel"}>
           <InitiativeOrder
@@ -200,6 +220,21 @@ function EncounterPage() {
           />
         </div>
       </div>
+
+      {/* Snackbar for URL copy notification */}
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={3000}
+        onClose={handleSnackbarClose}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "center",
+        }}
+      >
+        <Alert onClose={handleSnackbarClose} severity="success">
+          Encounter URL copied to clipboard!
+        </Alert>
+      </Snackbar>
     </div>
   );
 }

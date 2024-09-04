@@ -1,5 +1,16 @@
-import React, { useState, useEffect } from "react";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import Chip from "@mui/material/Chip";
+import Paper from "@mui/material/Paper";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+import React, { useEffect, useState } from "react";
 import AllyIcon from "../assets/icons/ally.svg";
 import EnemyIcon from "../assets/icons/enemy.svg";
 import NeutralIcon from "../assets/icons/neutral.svg";
@@ -71,10 +82,10 @@ function InitiativeOrder({
 
     editParticipant(
       participantId,
-      participant.name, 
-      participant.initiative, 
-      participant.ac, 
-      participant.type, 
+      participant.name,
+      participant.initiative,
+      participant.ac,
+      participant.type,
       updatedConditions
     );
   };
@@ -97,87 +108,108 @@ function InitiativeOrder({
   };
 
   return (
-    <div>
-      <div className="initiative-header">
-        <h2>Initiative Order</h2>
+    <Box>
+      <Box
+        mb={3}
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+      >
+        <Typography variant="h4" component="h2">
+          Initiative Order
+        </Typography>
         {nextTurn && (
-          <button onClick={nextTurn} className="btn btn-success">
+          <Button variant="contained" color="success" onClick={nextTurn}>
             Next Turn
-          </button>
+          </Button>
         )}
-      </div>
-      <table className="table">
-        <thead>
-          <tr>
-            <th style={{ width: "20%" }}>Name</th>
-            <th style={{ width: "20%" }}>Initiative</th>
-            <th style={{ width: "20%" }}>AC</th>
-            <th style={{ width: "20%" }}>Conditions</th>
-            {isCreator && <th style={{ width: "20%" }}>Actions</th>}
-          </tr>
-        </thead>
-        <tbody>
-          {participants.map((participant, index) => (
-            <tr
-              key={participant.id}
-              className={index === currentTurnIndex ? "current-turn" : ""}
-            >
-              <td>
-                {getIconByType(participant.type)} {participant.name}
-              </td>
-              <td>{participant.initiative}</td>
-              <td>{participant.ac}</td>
-              <td>
-                {Array.isArray(participant.conditions) &&
-                  participant.conditions.map((condition, idx) => (
-                    <Chip
-                      key={idx}
-                      onClick={() => handleConditionClick(condition)}
-                      onDelete={
-                        isCreator
-                          ? () =>
-                              handleConditionDelete(participant.id, condition)
-                          : undefined
-                      }
-                      label={condition}
-                      variant="outlined"
-                      style={{ marginRight: "5px", marginBottom: "5px" }}
-                    />
-                  ))}
-              </td>
+      </Box>
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell style={{ width: "20%" }}>Name</TableCell>
+              <TableCell style={{ width: "20%" }}>Initiative</TableCell>
+              <TableCell style={{ width: "20%" }}>AC</TableCell>
+              <TableCell style={{ width: "20%" }}>Conditions</TableCell>
               {isCreator && (
-                <td>
-                  <button
-                    className="btn btn-sm btn-primary"
-                    onClick={() => startEditing(participant)}
-                  >
-                    Edit
-                  </button>
-                  <button
-                    className="btn btn-sm btn-danger"
-                    onClick={() => deleteParticipant(participant.id)}
-                  >
-                    Delete
-                  </button>
-                </td>
+                <TableCell style={{ width: "20%" }}>Actions</TableCell>
               )}
-            </tr>
-          ))}
-        </tbody>
-      </table>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {participants.map((participant, index) => (
+              <TableRow
+                key={participant.id}
+                className={index === currentTurnIndex ? "current-turn" : ""}
+              >
+                <TableCell>
+                  {getIconByType(participant.type)} {participant.name}
+                </TableCell>
+                <TableCell>{participant.initiative}</TableCell>
+                <TableCell>{participant.ac}</TableCell>
+                <TableCell>
+                  {Array.isArray(participant.conditions) &&
+                    participant.conditions.map((condition, idx) => (
+                      <Chip
+                        key={idx}
+                        onClick={() => handleConditionClick(condition)}
+                        onDelete={
+                          isCreator
+                            ? () =>
+                                handleConditionDelete(participant.id, condition)
+                            : undefined
+                        }
+                        label={condition}
+                        variant="outlined"
+                        sx={{ marginRight: 1, marginBottom: 1 }}
+                      />
+                    ))}
+                </TableCell>
+                {isCreator && (
+                  <TableCell>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      size="small"
+                      onClick={() => startEditing(participant)}
+                      sx={{ marginRight: 1 }}
+                    >
+                      Edit
+                    </Button>
+                    <Button
+                      variant="contained"
+                      color="error"
+                      size="small"
+                      onClick={() => deleteParticipant(participant.id)}
+                    >
+                      Delete
+                    </Button>
+                  </TableCell>
+                )}
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
 
       {isCreator && (
-        <div style={{ marginTop: "20px" }}>
-          <h3>DM Notes</h3>
-          <textarea
+        <Box mt={3}>
+          <Typography variant="h5" component="h3">
+            DM Notes
+          </Typography>
+          <TextField
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             onBlur={handleBlur}
-            className="form-control"
-            rows="5"
+            multiline
+            rows={5}
+            fullWidth
+            variant="outlined"
             placeholder="Enter your notes here..."
+            sx={{ mt: 2 }}
           />
-        </div>
+        </Box>
       )}
 
       <EditParticipantModal
@@ -192,7 +224,7 @@ function InitiativeOrder({
         onClose={() => setIsModalOpen(false)}
         conditionName={selectedCondition}
       />
-    </div>
+    </Box>
   );
 }
 
