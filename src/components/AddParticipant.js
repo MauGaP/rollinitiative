@@ -91,7 +91,7 @@ function AddParticipant({ addParticipant }) {
           multiple
           value={selectedConditions}
           onChange={handleConditionChange}
-          input={<OutlinedInput label="Conditions" />}
+          input={<OutlinedInput label="Conditions (optional)" />}
           renderValue={(selected) => selected.join(", ")}
         >
           {CONDITIONS.map((condition) => (
