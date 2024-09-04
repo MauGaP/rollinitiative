@@ -72,16 +72,13 @@ function LandingPage() {
 
   return (
     <Container maxWidth="sm" sx={{ mt: 5 }}>
-      <Typography variant="h3" component="h1" gutterBottom>
-        DnD Encounter Manager
-      </Typography>
       {error && (
         <Alert severity="error" sx={{ mb: 3 }}>
           {error}
         </Alert>
       )}
       <Box sx={{ mb: 3 }}>
-        <Typography variant="h6">Create a New Encounter</Typography>
+        <Typography variant="h4">Create a New Encounter</Typography>
         <TextField
           label="Enter encounter name"
           variant="outlined"
@@ -103,7 +100,7 @@ function LandingPage() {
       </Box>
       <Divider sx={{ mb: 3 }} />
       <Box>
-        <Typography variant="h6">Join an Existing Encounter</Typography>
+        <Typography variant="h5">Join an Existing Encounter</Typography>
         <TextField
           label="Enter encounter ID"
           variant="outlined"
