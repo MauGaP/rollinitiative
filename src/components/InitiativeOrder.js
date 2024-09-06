@@ -1,6 +1,6 @@
 import DeleteIcon from "@mui/icons-material/Delete"; // Import the correct icon
 import EditIcon from "@mui/icons-material/Edit"; // Import the correct icon
-import { IconButton, TextField } from "@mui/material";
+import { IconButton, Switch, TextField } from "@mui/material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Chip from "@mui/material/Chip";
@@ -94,6 +94,18 @@ function InitiativeOrder({
     );
   };
 
+  const handleShowACToggle = (participant, checked) => {
+    editParticipant(
+      participant.id,
+      participant.name,
+      participant.initiative,
+      participant.ac,
+      participant.type,
+      participant.conditions,
+      checked
+    );
+  };
+
   const getIconByType = (type) => {
     switch (type) {
       case "Party":
@@ -160,7 +172,23 @@ function InitiativeOrder({
                 </TableCell>
                 <TableCell>{participant.initiative}</TableCell>
                 <TableCell>
-                  {participant.showAC ? participant.ac : "Hidden"}
+                  <Box display={"flex"} alignItems="center">
+                    <Box>
+                      {participant.showAC || isCreator
+                        ? `${participant.ac}`
+                        : "Hidden"}
+                    </Box>
+
+                    {isCreator && (
+                      <Switch
+                        checked={participant.showAC}
+                        onChange={(e) =>
+                          handleShowACToggle(participant, e.target.checked)
+                        }
+                        sx={{ ml: 1 }}
+                      />
+                    )}
+                  </Box>
                 </TableCell>
                 <TableCell>
                   {Array.isArray(participant.conditions) &&

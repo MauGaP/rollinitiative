@@ -12,7 +12,7 @@ import {
   Switch,
   TextField,
 } from "@mui/material";
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { conditions } from "../utils/conditions";
 import { typesList } from "../utils/types";
 
@@ -30,7 +30,7 @@ function AddParticipant({ addParticipant }) {
   // Handle the condition of switching showAC based on the type
   useEffect(() => {
     if (type === "Party") {
-      setShowAC(true);  // Default to true for 'Party'
+      setShowAC(true); // Default to true for 'Party'
     } else {
       setShowAC(false); // Default to false for others
     }
