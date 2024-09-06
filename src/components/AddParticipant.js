@@ -1,15 +1,18 @@
-import React, { useState } from "react";
 import {
+  Box,
   Button,
-  TextField,
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
   Checkbox,
+  FormControl,
+  FormControlLabel,
+  InputLabel,
   ListItemText,
+  MenuItem,
   OutlinedInput,
+  Select,
+  Switch,
+  TextField,
 } from "@mui/material";
+import React, { useState, useEffect } from "react";
 import { conditions } from "../utils/conditions";
 import { typesList } from "../utils/types";
 
@@ -22,6 +25,16 @@ function AddParticipant({ addParticipant }) {
   const [ac, setAc] = useState("");
   const [type, setType] = useState("Party");
   const [selectedConditions, setSelectedConditions] = useState([]);
+  const [showAC, setShowAC] = useState(true); // Default showAC to true
+
+  // Handle the condition of switching showAC based on the type
+  useEffect(() => {
+    if (type === "Party") {
+      setShowAC(true);  // Default to true for 'Party'
+    } else {
+      setShowAC(false); // Default to false for others
+    }
+  }, [type]);
 
   const handleConditionChange = (event) => {
     const {
@@ -33,12 +46,13 @@ function AddParticipant({ addParticipant }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (name && initiative && ac) {
-      addParticipant(name, initiative, ac, type, selectedConditions);
+      addParticipant(name, initiative, ac, type, selectedConditions, showAC);
       setName("");
       setInitiative("");
       setAc("");
       setType("Party");
       setSelectedConditions([]);
+      setShowAC(true); // Reset to default
     }
   };
 
@@ -76,14 +90,26 @@ function AddParticipant({ addParticipant }) {
         fullWidth
       />
 
-      <TextField
-        label="Armor Class"
-        type="number"
-        variant="outlined"
-        value={ac}
-        onChange={(e) => setAc(e.target.value)}
-        fullWidth
-      />
+      {/* Armor Class and Show Switch in the same row */}
+      <Box display={"flex"} alignItems={"center"} gap={1}>
+        <TextField
+          label="Armor Class"
+          type="number"
+          variant="outlined"
+          value={ac}
+          onChange={(e) => setAc(e.target.value)}
+          fullWidth
+        />
+        <FormControlLabel
+          control={
+            <Switch
+              checked={showAC}
+              onChange={(e) => setShowAC(e.target.checked)}
+            />
+          }
+          label="Show"
+        />
+      </Box>
 
       <FormControl fullWidth>
         <InputLabel>Conditions (optional)</InputLabel>

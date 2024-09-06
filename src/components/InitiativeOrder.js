@@ -1,9 +1,9 @@
-import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete"; // Import the correct icon
+import EditIcon from "@mui/icons-material/Edit"; // Import the correct icon
+import { IconButton, TextField } from "@mui/material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Chip from "@mui/material/Chip";
-import IconButton from "@mui/material/IconButton";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -11,7 +11,6 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import React, { useEffect, useState } from "react";
 import AllyIcon from "../assets/icons/ally.svg";
@@ -50,7 +49,7 @@ function InitiativeOrder({
     setIsEditModalOpen(true);
   };
 
-  const saveChanges = (name, initiative, ac, type, conditions) => {
+  const saveChanges = (name, initiative, ac, type, conditions, showAC) => {
     if (editingParticipantId) {
       editParticipant(
         editingParticipantId,
@@ -58,7 +57,8 @@ function InitiativeOrder({
         initiative,
         ac,
         type,
-        conditions
+        conditions,
+        showAC
       );
     }
     setIsEditModalOpen(false);
@@ -89,7 +89,8 @@ function InitiativeOrder({
       participant.initiative,
       participant.ac,
       participant.type,
-      updatedConditions
+      updatedConditions,
+      participant.showAC
     );
   };
 
@@ -131,12 +132,20 @@ function InitiativeOrder({
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell style={{ width: "20%" }}>Name</TableCell>
-              <TableCell style={{ width: "20%" }}>Initiative</TableCell>
-              <TableCell style={{ width: "20%" }}>AC</TableCell>
-              <TableCell style={{ width: "20%" }}>Conditions</TableCell>
+              <TableCell style={{ width: isCreator ? "30%" : "35%" }}>
+                Name
+              </TableCell>
+              <TableCell style={{ width: isCreator ? "15%" : "20%" }}>
+                Initiative
+              </TableCell>
+              <TableCell style={{ width: isCreator ? "15%" : "20%" }}>
+                AC
+              </TableCell>
+              <TableCell style={{ width: isCreator ? "25%" : "35%" }}>
+                Conditions
+              </TableCell>
               {isCreator && (
-                <TableCell style={{ width: "20%" }}>Actions</TableCell>
+                <TableCell style={{ width: "15%" }}>Actions</TableCell>
               )}
             </TableRow>
           </TableHead>
@@ -150,7 +159,9 @@ function InitiativeOrder({
                   {getIconByType(participant.type)} {participant.name}
                 </TableCell>
                 <TableCell>{participant.initiative}</TableCell>
-                <TableCell>{participant.ac}</TableCell>
+                <TableCell>
+                  {participant.showAC ? participant.ac : "Hidden"}
+                </TableCell>
                 <TableCell>
                   {Array.isArray(participant.conditions) &&
                     participant.conditions.map((condition, idx) => (
@@ -173,9 +184,7 @@ function InitiativeOrder({
                   <TableCell>
                     <IconButton
                       color="primary"
-                      size="small"
                       onClick={() => startEditing(participant)}
-                      sx={{ marginRight: 1 }}
                     >
                       <EditIcon />
                     </IconButton>

@@ -9,11 +9,12 @@ function Participant({
   const [isEditing, setIsEditing] = useState(false);
   const [tempInitiative, setTempInitiative] = useState(participant.initiative);
   const [tempAC, setTempAC] = useState(participant.ac);
+  const [showAC, setShowAC] = useState(participant.showAC || true); // Default to true if not set
 
   const handleEditClick = () => setIsEditing(true);
 
   const handleSaveClick = () => {
-    editParticipant(participant.id, tempInitiative, tempAC);
+    editParticipant(participant.id, tempInitiative, tempAC, showAC); // Pass showAC when saving
     setIsEditing(false);
   };
 
@@ -32,18 +33,39 @@ function Participant({
           participant.initiative
         )}
       </td>
+      
+      {/* Conditionally display AC based on showAC */}
       <td>
-        {isEditing ? (
-          <input
-            type="number"
-            value={tempAC}
-            onChange={(e) => setTempAC(e.target.value)}
-            className="form-control"
-          />
+        {showAC ? (
+          isEditing ? (
+            <input
+              type="number"
+              value={tempAC}
+              onChange={(e) => setTempAC(e.target.value)}
+              className="form-control"
+            />
+          ) : (
+            participant.ac
+          )
         ) : (
-          participant.ac
+          <span>Hidden</span> // Display a placeholder if AC is hidden
         )}
       </td>
+
+      {/* Show toggle for showAC if editing */}
+      {isEditing && (
+        <td>
+          <label>
+            Show AC:
+            <input
+              type="checkbox"
+              checked={showAC}
+              onChange={(e) => setShowAC(e.target.checked)}
+            />
+          </label>
+        </td>
+      )}
+
       <td>
         {isEditing ? (
           <button onClick={handleSaveClick} className="btn btn-success btn-sm">

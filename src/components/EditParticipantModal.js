@@ -1,3 +1,4 @@
+import { Box, Switch } from "@mui/material";
 import Button from "@mui/material/Button";
 import Checkbox from "@mui/material/Checkbox";
 import Dialog from "@mui/material/Dialog";
@@ -20,6 +21,7 @@ function EditParticipantModal({ open, onClose, onSave, participant }) {
   const [tempAC, setTempAC] = useState("");
   const [tempType, setTempType] = useState("Party");
   const [selectedConditions, setSelectedConditions] = useState([]);
+  const [showAC, setShowAC] = useState(true); // Default showAC to true
 
   useEffect(() => {
     if (participant) {
@@ -30,6 +32,7 @@ function EditParticipantModal({ open, onClose, onSave, participant }) {
       setSelectedConditions(
         Array.isArray(participant.conditions) ? participant.conditions : []
       );
+      setShowAC(participant.showAC !== undefined ? participant.showAC : true); // Ensure showAC has a default value
     }
   }, [participant]);
 
@@ -44,8 +47,14 @@ function EditParticipantModal({ open, onClose, onSave, participant }) {
   };
 
   const handleSave = () => {
-    onSave(tempName, tempInitiative, tempAC, tempType, selectedConditions);
-    onClose();
+    onSave(
+      tempName,
+      tempInitiative,
+      tempAC,
+      tempType,
+      selectedConditions,
+      showAC
+    );
   };
 
   return (
@@ -59,6 +68,7 @@ function EditParticipantModal({ open, onClose, onSave, participant }) {
           value={tempName}
           onChange={(e) => setTempName(e.target.value)}
         />
+
         <TextField
           label="Initiative"
           type="number"
@@ -67,14 +77,28 @@ function EditParticipantModal({ open, onClose, onSave, participant }) {
           value={tempInitiative}
           onChange={(e) => setTempInitiative(e.target.value)}
         />
-        <TextField
-          label="Armor Class"
-          type="number"
-          fullWidth
-          margin="normal"
-          value={tempAC}
-          onChange={(e) => setTempAC(e.target.value)}
-        />
+
+        <Box display={"flex"} alignItems={"center"} gap={1}>
+          <TextField
+            label="Armor Class"
+            type="number"
+            fullWidth
+            margin="normal"
+            value={tempAC}
+            onChange={(e) => setTempAC(e.target.value)}
+          />
+
+          <FormControlLabel
+            control={
+              <Switch
+                checked={showAC}
+                onChange={(e) => setShowAC(e.target.checked)}
+              />
+            }
+            label="Show"
+          />
+        </Box>
+
         <TextField
           label="Type / Team"
           select
@@ -107,6 +131,7 @@ function EditParticipantModal({ open, onClose, onSave, participant }) {
           </div>
         </div>
       </DialogContent>
+      
       <DialogActions>
         <Button onClick={onClose} color="secondary">
           Cancel

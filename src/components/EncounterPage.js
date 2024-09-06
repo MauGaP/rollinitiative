@@ -75,7 +75,8 @@ function EncounterPage() {
     initiative,
     ac,
     type,
-    conditions = []
+    conditions = [],
+    showAC = true
   ) => {
     if (!isCreator) return;
 
@@ -86,6 +87,7 @@ function EncounterPage() {
       ac,
       type,
       conditions,
+      showAC,
     };
     const updatedParticipants = [
       ...encounter.participants,
@@ -109,7 +111,8 @@ function EncounterPage() {
     newInitiative,
     newAC,
     newType,
-    newConditions = []
+    newConditions = [],
+    showAC
   ) => {
     if (!isCreator) return;
 
@@ -123,6 +126,7 @@ function EncounterPage() {
               ac: parseInt(newAC, 10),
               type: newType,
               conditions: newConditions,
+              showAC,
             }
           : p
       )
