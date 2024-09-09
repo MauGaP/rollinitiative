@@ -5,14 +5,13 @@ import { ThemeProvider, createTheme } from "@mui/material/styles";
 import Switch from "@mui/material/Switch";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import { initializeApp } from "firebase/app";
+import { initializeApp, getApps, getApp } from "firebase/app"; // Add getApps and getApp for Firebase reinit check
 import { getFirestore } from "firebase/firestore";
 import { useMemo, useState } from "react";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import EncounterPage from "./components/EncounterPage";
 import LandingPage from "./components/LandingPage";
 import "./styles.css";
-
 import { FormControlLabel } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
@@ -82,9 +81,16 @@ const firebaseConfig = {
   measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID,
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+const reinitializeFirebase = () => {
+  if (!getApps().length) {
+    const app = initializeApp(firebaseConfig);
+    return getFirestore(app);
+  } else {
+    return getFirestore(getApp());
+  }
+};
+
+const db = reinitializeFirebase();
 
 function App() {
   const [darkMode, setDarkMode] = useState(false);

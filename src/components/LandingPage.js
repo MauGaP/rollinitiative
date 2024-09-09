@@ -21,7 +21,6 @@ function LandingPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm")); // Detect if the screen is mobile
 
@@ -45,6 +44,10 @@ function LandingPage() {
       navigate(`/encounter/${docRef.id}`);
     } catch (e) {
       console.error("Error adding document: ", e);
+      if (e.message.includes("undefined") || e.code === "permission-denied") {
+        // Reinitialize Firebase or handle session expiration
+        console.error("Session expired or config error. Please retry.");
+      }
       setError("Failed to create the encounter. Please try again.");
     } finally {
       setLoading(false);
@@ -76,7 +79,10 @@ function LandingPage() {
   };
 
   return (
-    <Container maxWidth="sm" sx={{ mt: isMobile ? 3 : 5, px: isMobile ? 2 : 0 }}>
+    <Container
+      maxWidth="sm"
+      sx={{ mt: isMobile ? 3 : 5, px: isMobile ? 2 : 0 }}
+    >
       {error && (
         <Alert severity="error" sx={{ mb: 3 }}>
           {error}
