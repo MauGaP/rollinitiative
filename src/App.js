@@ -5,9 +5,9 @@ import { ThemeProvider, createTheme } from "@mui/material/styles";
 import Switch from "@mui/material/Switch";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import { initializeApp, getApps, getApp } from "firebase/app"; // Add getApps and getApp for Firebase reinit check
+import { initializeApp, getApps, getApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import EncounterPage from "./components/EncounterPage";
 import LandingPage from "./components/LandingPage";
@@ -93,7 +93,12 @@ const reinitializeFirebase = () => {
 const db = reinitializeFirebase();
 
 function App() {
-  const [darkMode, setDarkMode] = useState(false);
+  const getInitialMode = () => {
+    const savedMode = localStorage.getItem("darkMode");
+    return savedMode ? JSON.parse(savedMode) : false; // Default is light mode (false)
+  };
+
+  const [darkMode, setDarkMode] = useState(getInitialMode);
 
   const theme = useMemo(
     () =>
@@ -106,8 +111,20 @@ function App() {
   );
 
   const handleThemeChange = () => {
-    setDarkMode(!darkMode);
+    setDarkMode((prevMode) => {
+      const newMode = !prevMode;
+      localStorage.setItem("darkMode", JSON.stringify(newMode)); // Save preference to localStorage
+      return newMode;
+    });
   };
+
+  useEffect(() => {
+    // Check and apply the stored darkMode preference on initial load
+    const savedMode = localStorage.getItem("darkMode");
+    if (savedMode) {
+      setDarkMode(JSON.parse(savedMode));
+    }
+  }, []);
 
   return (
     <ThemeProvider theme={theme}>
@@ -137,5 +154,5 @@ function App() {
   );
 }
 
-export { db };
+export { reinitializeFirebase, db };
 export default App;
