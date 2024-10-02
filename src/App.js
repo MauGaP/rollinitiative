@@ -1,19 +1,44 @@
+import { FormControlLabel } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
-import { ThemeProvider, createTheme } from "@mui/material/styles";
+import { ThemeProvider, createTheme, styled } from "@mui/material/styles";
 import Switch from "@mui/material/Switch";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import { initializeApp, getApps, getApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+import { getApp, getApps, initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
-import { useMemo, useState, useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import EncounterPage from "./components/EncounterPage";
 import LandingPage from "./components/LandingPage";
 import "./styles.css";
-import { FormControlLabel } from "@mui/material";
-import { styled } from "@mui/material/styles";
+
+// Firebase configuration
+const firebaseConfig = {
+  apiKey: 'AIzaSyCw253MwBxmTs473W_AGq-9dgFUf9Vjqvo',
+  authDomain: 'maugap-roll-initiative.firebaseapp.com',
+  projectId: 'maugap-roll-initiative',
+  storageBucket: 'maugap-roll-initiative.appspot.com',
+  messagingSenderId: '480233268516',
+  appId: '1:480233268516:web:f9a36ba00345307367bfb1',
+  measurementId: 'G-E19KLETKQ6',
+};
+
+// Function to reinitialize Firebase and get Firestore instance
+const reinitializeFirebase = () => {
+  if (!getApps().length) {
+    const app = initializeApp(firebaseConfig);
+    getAnalytics(app); // Initialize Analytics if needed
+    return getFirestore(app);
+  } else {
+    return getFirestore(getApp());
+  }
+};
+
+// Reinitialize Firebase and Firestore
+const db = reinitializeFirebase();
 
 const MaterialUISwitch = styled(Switch)(({ theme }) => ({
   width: 62,
@@ -70,27 +95,6 @@ const MaterialUISwitch = styled(Switch)(({ theme }) => ({
     }),
   },
 }));
-
-const firebaseConfig = {
-  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
-  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
-  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.REACT_APP_FIREBASE_APP_ID,
-  measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID,
-};
-
-const reinitializeFirebase = () => {
-  if (!getApps().length) {
-    const app = initializeApp(firebaseConfig);
-    return getFirestore(app);
-  } else {
-    return getFirestore(getApp());
-  }
-};
-
-const db = reinitializeFirebase();
 
 function App() {
   const getInitialMode = () => {
@@ -154,5 +158,5 @@ function App() {
   );
 }
 
-export { reinitializeFirebase, db };
+export { db, reinitializeFirebase };
 export default App;
