@@ -17,13 +17,13 @@ import "./styles.css";
 
 // Firebase configuration
 const firebaseConfig = {
-  apiKey: 'AIzaSyCw253MwBxmTs473W_AGq-9dgFUf9Vjqvo',
-  authDomain: 'maugap-roll-initiative.firebaseapp.com',
-  projectId: 'maugap-roll-initiative',
-  storageBucket: 'maugap-roll-initiative.appspot.com',
-  messagingSenderId: '480233268516',
-  appId: '1:480233268516:web:f9a36ba00345307367bfb1',
-  measurementId: 'G-E19KLETKQ6',
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_FIREBASE_APP_ID,
+  measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID,
 };
 
 // Function to reinitialize Firebase and get Firestore instance
