@@ -22,6 +22,7 @@ function EditParticipantModal({ open, onClose, onSave, participant }) {
   const [tempType, setTempType] = useState("Party");
   const [selectedConditions, setSelectedConditions] = useState([]);
   const [showAC, setShowAC] = useState(true); // Default showAC to true
+  const [isDowned, setIsDowned] = useState(false);
 
   useEffect(() => {
     if (participant) {
@@ -33,6 +34,7 @@ function EditParticipantModal({ open, onClose, onSave, participant }) {
         Array.isArray(participant.conditions) ? participant.conditions : []
       );
       setShowAC(participant.showAC !== undefined ? participant.showAC : true); // Ensure showAC has a default value
+      setIsDowned(participant.isDowned || false);
     }
   }, [participant]);
 
@@ -53,7 +55,8 @@ function EditParticipantModal({ open, onClose, onSave, participant }) {
       tempAC,
       tempType,
       selectedConditions,
-      showAC
+      showAC,
+      isDowned
     );
   };
 
@@ -128,6 +131,28 @@ function EditParticipantModal({ open, onClose, onSave, participant }) {
                 label={condition}
               />
             ))}
+          </div>
+        </div>
+        <div style={{ marginTop: "10px" }}>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={isDowned}
+                onChange={(e) => setIsDowned(e.target.checked)}
+                icon={<img src="/assets/icons/heart.svg" alt="Healthy" style={{ width: 24, height: 24, verticalAlign: 'middle' }} />}
+                checkedIcon={<img src="/assets/icons/skull.svg" alt="Downed" style={{ width: 24, height: 24, verticalAlign: 'middle' }} />}
+              />
+            }
+            label={
+              isDowned
+                ? (<span> Downed (skip in order)</span>)
+                : (<span> Healthy (in initiative)</span>)
+            }
+          />
+          <div style={{ fontSize: '0.9em', color: '#666', marginLeft: 32 }}>
+            {isDowned
+              ? 'This participant will be skipped in the initiative order and shown as downed.'
+              : 'This participant will act normally in the initiative order.'}
           </div>
         </div>
       </DialogContent>

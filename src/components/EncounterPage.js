@@ -76,7 +76,8 @@ function EncounterPage() {
     ac,
     type,
     conditions = [],
-    showAC = true
+    showAC = true,
+    isDowned = false
   ) => {
     if (!isCreator) return;
 
@@ -88,6 +89,7 @@ function EncounterPage() {
       type,
       conditions,
       showAC,
+      isDowned,
     };
     const updatedParticipants = [
       ...encounter.participants,
@@ -112,7 +114,8 @@ function EncounterPage() {
     newAC,
     newType,
     newConditions = [],
-    showAC
+    showAC,
+    isDowned = false
   ) => {
     if (!isCreator) return;
 
@@ -127,6 +130,7 @@ function EncounterPage() {
               type: newType,
               conditions: newConditions,
               showAC,
+              isDowned,
             }
           : p
       )
@@ -172,9 +176,15 @@ function EncounterPage() {
   };
 
   const nextTurn = async () => {
-    const newTurnIndex = (currentTurnIndex + 1) % encounter.participants.length;
+    if (!encounter.participants.length) return;
+    let newTurnIndex = currentTurnIndex;
+    let attempts = 0;
+    do {
+      newTurnIndex = (newTurnIndex + 1) % encounter.participants.length;
+      attempts++;
+      if (attempts > encounter.participants.length) break;
+    } while (encounter.participants[newTurnIndex].isDowned);
     setCurrentTurnIndex(newTurnIndex);
-
     try {
       await updateDoc(doc(db, "encounters", id), {
         currentTurnIndex: newTurnIndex,
@@ -212,16 +222,26 @@ function EncounterPage() {
           </Box>
         )}
         <div className={isCreator ? "right-panel" : "full-width-panel"}>
-          <InitiativeOrder
-            participants={encounter.participants}
-            currentTurnIndex={currentTurnIndex}
-            nextTurn={isCreator ? nextTurn : null}
-            editParticipant={isCreator ? editParticipant : null}
-            deleteParticipant={isCreator ? deleteParticipant : null}
-            dmNotes={encounter.dmNotes || ""}
-            updateDmNotes={updateDmNotes}
-            isCreator={isCreator}
-          />
+          {(() => {
+            const filteredParticipants = isCreator ? encounter.participants : encounter.participants.filter(p => !p.isDowned);
+            let mappedCurrentTurnIndex = currentTurnIndex;
+            if (!isCreator) {
+              const currentTurnParticipant = encounter.participants[currentTurnIndex];
+              mappedCurrentTurnIndex = filteredParticipants.findIndex(p => p.id === currentTurnParticipant?.id);
+            }
+            return (
+              <InitiativeOrder
+                participants={isCreator ? encounter.participants : filteredParticipants}
+                currentTurnIndex={mappedCurrentTurnIndex}
+                nextTurn={isCreator ? nextTurn : null}
+                editParticipant={isCreator ? editParticipant : null}
+                deleteParticipant={isCreator ? deleteParticipant : null}
+                dmNotes={encounter.dmNotes || ""}
+                updateDmNotes={updateDmNotes}
+                isCreator={isCreator}
+              />
+            );
+          })()}
         </div>
       </div>
 
