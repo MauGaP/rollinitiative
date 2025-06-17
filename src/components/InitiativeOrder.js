@@ -190,7 +190,7 @@ function InitiativeOrder({
                 className={index === currentTurnIndex ? "current-turn" : ""}
                 style={
                   participant.isDowned
-                    ? { opacity: 0.4, textDecoration: "line-through" }
+                    ? { opacity: 0.7, textDecoration: "line-through" }
                     : {}
                 }
               >
