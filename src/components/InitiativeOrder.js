@@ -11,6 +11,7 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
+import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import React, { useEffect, useState } from "react";
 import AllyIcon from "../assets/icons/ally.svg";
@@ -49,7 +50,7 @@ function InitiativeOrder({
     setIsEditModalOpen(true);
   };
 
-  const saveChanges = (name, initiative, ac, type, conditions, showAC) => {
+  const saveChanges = (name, initiative, ac, type, conditions, showAC, isDowned) => {
     if (editingParticipantId) {
       editParticipant(
         editingParticipantId,
@@ -58,7 +59,8 @@ function InitiativeOrder({
         ac,
         type,
         conditions,
-        showAC
+        showAC,
+        isDowned
       );
     }
     setIsEditModalOpen(false);
@@ -109,14 +111,28 @@ function InitiativeOrder({
   const getIconByType = (type) => {
     switch (type) {
       case "Party":
-        return <img src={PartyIcon} alt="Party" className="participant-icon" />;
+        return (
+          <Tooltip title="Party" arrow>
+            <img src={PartyIcon} alt="Party" className="participant-icon" />
+          </Tooltip>
+        );
       case "Enemy":
-        return <img src={EnemyIcon} alt="Enemy" className="participant-icon" />;
+        return (
+          <Tooltip title="Enemy" arrow>
+            <img src={EnemyIcon} alt="Enemy" className="participant-icon" />
+          </Tooltip>
+        );
       case "Ally":
-        return <img src={AllyIcon} alt="Ally" className="participant-icon" />;
+        return (
+          <Tooltip title="Ally" arrow>
+            <img src={AllyIcon} alt="Ally" className="participant-icon" />
+          </Tooltip>
+        );
       case "Neutral":
         return (
-          <img src={NeutralIcon} alt="Neutral" className="participant-icon" />
+          <Tooltip title="Neutral" arrow>
+            <img src={NeutralIcon} alt="Neutral" className="participant-icon" />
+          </Tooltip>
         );
       default:
         return null;
@@ -141,11 +157,15 @@ function InitiativeOrder({
         )}
       </Box>
       <TableContainer component={Paper}>
-        <Table>
+        <Table sx={{ tableLayout: "auto" }}>
           <TableHead>
             <TableRow>
               <TableCell style={{ width: isCreator ? "30%" : "35%" }}>
-                Name
+                <Box
+                  sx={{ display: "flex", alignItems: "center", minWidth: 140 }}
+                >
+                  Name
+                </Box>
               </TableCell>
               <TableCell style={{ width: isCreator ? "15%" : "20%" }}>
                 Initiative
@@ -157,7 +177,9 @@ function InitiativeOrder({
                 Conditions
               </TableCell>
               {isCreator && (
-                <TableCell style={{ width: "15%" }}>Actions</TableCell>
+                <TableCell style={{ minWidth: 180 }} align="center">
+                  <Box sx={{ display: "flex", gap: 1 }}>Actions</Box>
+                </TableCell>
               )}
             </TableRow>
           </TableHead>
@@ -166,9 +188,19 @@ function InitiativeOrder({
               <TableRow
                 key={participant.id}
                 className={index === currentTurnIndex ? "current-turn" : ""}
+                style={
+                  participant.isDowned
+                    ? { opacity: 0.4, textDecoration: "line-through" }
+                    : {}
+                }
               >
                 <TableCell>
-                  {getIconByType(participant.type)} {participant.name}
+                  <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 1, minWidth: 60 }}>
+                    {getIconByType(participant.type)}
+                    <span style={{ whiteSpace: 'nowrap', maxWidth: 100, textAlign: 'left' }}>
+                      {participant.name}
+                    </span>
+                  </Box>
                 </TableCell>
                 <TableCell>{participant.initiative}</TableCell>
                 <TableCell>
@@ -210,19 +242,52 @@ function InitiativeOrder({
                 </TableCell>
                 {isCreator && (
                   <TableCell>
-                    <IconButton
-                      color="primary"
-                      onClick={() => startEditing(participant)}
+                    <Tooltip
+                      title={
+                        participant.isDowned ? "Cure (revive)" : "Mark Downed"
+                      }
+                      arrow
                     >
-                      <EditIcon />
-                    </IconButton>
-                    <IconButton
-                      color="error"
-                      size="small"
-                      onClick={() => deleteParticipant(participant.id)}
-                    >
-                      <DeleteIcon />
-                    </IconButton>
+                      <IconButton
+                        color={participant.isDowned ? "success" : "default"}
+                        size="small"
+                        onClick={() =>
+                          editParticipant(
+                            participant.id,
+                            participant.name,
+                            participant.initiative,
+                            participant.ac,
+                            participant.type,
+                            participant.conditions,
+                            participant.showAC,
+                            !participant.isDowned // Toggle isDowned
+                          )
+                        }
+                      >
+                        {participant.isDowned ? (
+                          <img src="/assets/icons/heart.svg" alt="Downed" style={{ width: 24, height: 24, verticalAlign: 'middle' }} />
+                        ) : (
+                          <img src="/assets/icons/skull.svg" alt="Healthy" style={{ width: 24, height: 24, verticalAlign: 'middle' }} />
+                        )}
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Edit" arrow>
+                      <IconButton
+                        color="primary"
+                        onClick={() => startEditing(participant)}
+                      >
+                        <EditIcon />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Delete" arrow>
+                      <IconButton
+                        color="error"
+                        size="small"
+                        onClick={() => deleteParticipant(participant.id)}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    </Tooltip>
                   </TableCell>
                 )}
               </TableRow>
@@ -234,7 +299,7 @@ function InitiativeOrder({
       {isCreator && (
         <Box mt={3}>
           <Typography variant="h5" component="h3">
-            DM Notes
+            DM Notes (Only visible to you)
           </Typography>
           <TextField
             value={notes}

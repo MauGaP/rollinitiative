@@ -72,7 +72,7 @@ body {
 }
 
 /* Responsive Adjustments */
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .left-panel,
   .right-panel {
     width: 100%; /* Panels take full width on smaller screens */

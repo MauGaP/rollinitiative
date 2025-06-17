@@ -136,7 +136,7 @@ function App() {
       <AppBar position="static">
         <Toolbar>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            MauGaP's Initiative Tracker for Dungeons and Dragons
+            MauGaP's Initiative Tracker for TTRPGs
           </Typography>
           <FormControlLabel
             control={<MaterialUISwitch sx={{ m: 1 }} />}
