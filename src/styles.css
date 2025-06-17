@@ -27,11 +27,12 @@ body {
 /* Content Container */
 .content-container {
   display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 32px;
   width: 100%;
   max-width: 1200px;
-  justify-content: space-between;
-  gap: 20px;
-  flex-wrap: wrap; /* Ensure wrapping on smaller screens */
+  margin: 0 auto;
 }
 
 /* Panel Styles */
@@ -43,12 +44,22 @@ body {
   padding: 10px;
 }
 
+.left-panel, .right-panel {
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+}
+
 .left-panel {
-  width: 30%;
+  width: 32%;
+  min-width: 300px;
 }
 
 .right-panel {
-  width: 65%;
+  width: 66%;
+  min-width: 400px;
 }
 
 .full-width-panel {
@@ -73,9 +84,13 @@ body {
 
 /* Responsive Adjustments */
 @media (max-width: 1024px) {
-  .left-panel,
-  .right-panel {
-    width: 100%; /* Panels take full width on smaller screens */
+  .content-container {
+    flex-direction: column;
+    gap: 24px;
+  }
+  .left-panel, .right-panel {
+    width: 100%;
+    min-width: unset;
   }
 }
 

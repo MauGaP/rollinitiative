@@ -1,72 +1,99 @@
-# rollinitiative
+# MauGaP's Initiative Tracker for TTRPGs
 
-## Getting Started with Create React App
+A modern, real-time initiative tracker for tabletop RPGs (TTRPGs) like Dungeons & Dragons. Built with React and Firebase, this app helps DMs and players manage combat encounters with ease, including initiative order, participant management, and clear DM/player views.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+---
 
-## Available Scripts
+## 🚀 Live Demo
+[https://maugap-roll-initiative.web.app](https://maugap-roll-initiative.web.app)
 
-In the project directory, you can run:
+---
 
-### `npm start`
+## ✨ Features
+- **Initiative Order Management:** Add, edit, and remove participants with initiative, AC, type/team, and conditions.
+- **Downed/Healthy State:** Mark characters as downed (skull icon) or healthy (heart icon) with colorful SVGs. Downed characters are skipped in initiative and hidden from player view.
+- **DM vs Player View:** DMs see all participants (including downed); players only see active ones.
+- **Real-Time Sync:** All changes update instantly for everyone via Firebase Firestore.
+- **Responsive Design:** Works great on desktop and mobile. Add Participants form moves on top at 1024px width.
+- **Tooltips & Accessibility:** All action buttons and team icons have tooltips for clarity.
+- **Visual Feedback:** Current turn is highlighted; downed participants are visually distinct.
+- **Modern UI:** Built with Material-UI and custom SVG icons.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+---
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## 🛠️ Tech Stack
+- **Frontend:** React (Create React App), Material-UI (MUI)
+- **Backend/Realtime:** Firebase Firestore, Firebase Hosting
+- **Icons:** Custom SVGs for heart (healthy) and skull (downed)
+- **Other:** ESLint, Prettier, Jest, React Testing Library
 
-### `npm test`
+---
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## 📦 Project Structure
+```
+├── public/
+│   └── assets/
+│       └── icons/
+│           ├── heart.svg
+│           └── skull.svg
+├── src/
+│   ├── components/
+│   │   ├── AddParticipant.js
+│   │   ├── EditParticipantModal.js
+│   │   ├── EncounterPage.js
+│   │   ├── InitiativeOrder.js
+│   │   └── ...
+│   ├── assets/
+│   ├── styles.css
+│   └── ...
+├── README.md
+└── ...
+```
 
-### `npm run build`
+---
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## 🏁 Getting Started
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Prerequisites
+- Node.js (v16+ recommended)
+- npm
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Installation
+```bash
+git clone https://github.com/yourusername/rollinitiative.git
+cd rollinitiative
+npm install
+```
 
-### `npm run eject`
+### Running Locally
+```bash
+npm start
+```
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### Building for Production
+```bash
+npm run build
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Deploying to Firebase
+```bash
+npm run build
+npx firebase deploy --only hosting
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+---
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## 🧩 Contributing
+Pull requests and issues are welcome! Please open an issue to discuss your idea or bug before submitting a PR.
 
-## Learn More
+---
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## 📄 License
+MIT
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+---
 
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## 🙏 Credits
+- Heart and Skull SVGs by [JoyPixels](https://github.com/joypixels/emojione) and others, MIT License.
+- Built by MauGaP.
